@@ -19,18 +19,20 @@
 """
  
 import socket
+import sys
 
 host, port = 'localhost', 6098
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-server.bind((host, port))
-server.listen(0)
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect((host, port))
 
-print("Listening at port %d" % port)
+log = ""
+i = 1
 
-while True:
-    client, address = server.accept()
-    data = client.recv(1024)
-    print(data.decode('ASCII'))
-    client.close()
+if len(sys.argv) > 1:
+    while i < len(sys.argv):
+        log = log + sys.argv[i] + " "
+        i = i + 1
+
+client.send(log.encode())
+client.close()
